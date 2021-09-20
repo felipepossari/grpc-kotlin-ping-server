@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package ping;
+
+option java_package = "com.grpc";
+option java_multiple_files = true;
+
+message PingRequest {
+  string address = 1;
+}
+
+message PingResponse {
+  string address = 1;
+  int32 time = 2;
+}
+
+service PingService {
+  rpc Ping(PingRequest) returns (PingResponse) {}
+  rpc PingServerStream(PingRequest) returns (stream PingResponse) {}
+}
