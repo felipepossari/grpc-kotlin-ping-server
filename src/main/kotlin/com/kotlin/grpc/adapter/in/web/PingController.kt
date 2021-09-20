@@ -28,4 +28,17 @@ class PingController(
         val response = grpcClientConfiguration.stub.ping(grpcRequest)
         return ResponseEntity.ok(PingWebResponse(response.address, response.time))
     }
+
+    @PostMapping("/ping-server-stream")
+    fun pingServerStream(@RequestBody request: PingWebRequest): ResponseEntity<PingWebResponse> {
+        val grpcRequest = PingRequest.newBuilder().apply {
+            address = request.address
+        }.build()
+
+        grpcClientConfiguration.stub.pingServerStream(grpcRequest).forEachRemaining {
+            LOG.info("Ping response: {}:{}", it.address, it.time)
+        }
+
+        return ResponseEntity.ok().build()
+    }
 }
